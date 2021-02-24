@@ -4,6 +4,8 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
+    social: menu
+    source_code: embed
 ---
 
 ```{r setup, include=FALSE}
@@ -31,7 +33,7 @@ theme_set(theme_minimal(base_size = 15)) # set theme
 options(scipen=999) # remove scientific notation
 ```
 
-```{r include = FALSE}
+```{r wrangling, include = FALSE}
 # import data
 df <- import(here("data", "ALL_MFQ30.csv"),     # moral values, countries, & sex
              setclass = "tbl_df") %>% 
@@ -109,7 +111,31 @@ df %>%
 ```
 
 
+# Data & Summary {data-orientation=rows}
 
+Sidebar {.sidebar}
+-------------------------------
+**Data**
+Data used in this dashboard come from the second study of XX. It's a publicly available dataset, which can be downloaded from XX.
+
+19 countries.
+
+**Summary of Visualizations**
+
+The first set of plots represents the average scores for individualizing and binding foundations across countries. Building on this plot, I next add the sex variable into the mix.  
+
+The second set of plots visualize the effect of sex and several country-level variables on the aforementioned foundations.  
+
+*Country-level variables*
+a
+a
+a
+a
+a
+a
+
+
+Row {data-height=600}
 
 Column {data-width=650}
 -----------------------------------------------------------------------
