@@ -345,8 +345,28 @@ dw_plot(both_ms) +
 ### Revised version
 
 ```{r}
-
+dw_plot(both_ms, 
+        dot_args = list(size = 2)
+        ) + 
+  ggtitle("Predicting moral values by sex and country-level predictors") +
+  xlab("Unstandardized Coefficient") + 
+  geom_vline(xintercept = 0, 
+             colour = "grey60", 
+             linetype = 2) + 
+  theme(plot.title = element_text(face = "bold"),
+        plot.title.position = "plot",
+        axis.text.y = element_text(color = "black",
+                                   size = 11),
+        legend.justification = c(0, 0), 
+        legend.position = c(.74, .85),
+        legend.background = element_rect(colour = "grey80"),
+        legend.title.align = .5
+        ) +
+  scale_x_continuous(n.breaks = 10) +
+  scale_color_manual(values = c("blue", "red"))
 ```
+
+> Easier to see the points. The legend makes sense now, but still could be better.
 
 # Predictors of moral values for each country
 
