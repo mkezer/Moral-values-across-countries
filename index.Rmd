@@ -117,15 +117,15 @@ df %>%
 Sidebar {.sidebar}
 -----------------------------------------------------------------------
 **Data**  
-Data used in this dashboard come from the second study of XX. It's a publicly available dataset, which can be downloaded from XX.
+Data used in this dashboard come from the second study of [Atari et al. (2020)](http://dx.doi.org/10.1098/rspb.2020.1201). It's a publicly available dataset, which can be downloaded from [Kaggle](https://www.kaggle.com/tunguz/sex-differences-in-moral-judgements-67-countries).  
 
-19 countries.
+This study has data on moral values in 19 countries. There is also a second dataset with countr-level variables (see below for the list of the variables).  
 
 **Summary of the Visualizations**
 
-The first set of plots (on this page) represents the average scores for individualizing and binding foundations across countries. Next, building on this plot, I add the sex variable into the mix.  
+The first set of plots (on this page) represents the average scores for individualizing and binding foundations across countries.  
 
-The second set of plots visualize the effect of sex and several country-level variables on the aforementioned foundations.  
+The second and third set of plots visualize the effect of sex and several country-level variables on the aforementioned foundations.  
 
 *Country-level variables*  
 Population Sex Ratio  
@@ -409,6 +409,21 @@ Column {data-width=600}
 ### Final Version
 
 ```{r}
+# run the models
+model1 <- lmer(indiv ~ gender_eqality + (sex|country), data = df)
+model2 <- lmer(bind ~ gender_eqality + (sex|country), data = df)
+
+# extract the predicted values
+predicted1 <- 
+  ggpredict(model1, 
+            terms = c("gender_eqality", "country"),
+            type = "re")
+
+predicted2 <- 
+  ggpredict(model2, 
+            terms = c("gender_eqality", "country"),
+            type = "re")
+
 p11 <- 
   predicted1 %>% 
   ggplot(aes(x, predicted, color = group)) +
@@ -447,21 +462,6 @@ Column {data-width=400}
 ### Initial version
 
 ```{r}
-# run the models
-model1 <- lmer(indiv ~ gender_eqality + (sex|country), data = df)
-model2 <- lmer(bind ~ gender_eqality + (sex|country), data = df)
-
-# extract the predicted values
-predicted1 <- 
-  ggpredict(model1, 
-            terms = c("gender_eqality", "country"),
-            type = "re")
-
-predicted2 <- 
-  ggpredict(model2, 
-            terms = c("gender_eqality", "country"),
-            type = "re")
-
 # plot
 p1 <- 
 predicted1 %>% 
