@@ -434,17 +434,20 @@ predicted2 <-
             type = "re")
 
 # plot
-ggpubr::ggarrange(
+p1 <- 
 predicted1 %>% 
   ggplot(aes(x, predicted, color = group)) +
-  geom_line(size = 1),
+  geom_line(size = 1)
 
+p2 <- 
 predicted2 %>% 
   ggplot(aes(x, predicted, color = group)) +
-  geom_line(size = 1),
+  geom_line(size = 1)
 
-common.legend = TRUE,legend = "bottom"
-) 
+ggpubr::ggarrange(p1, p2,
+                  common.legend = TRUE,
+                  legend = "bottom"
+                 ) 
 ```
 
 > The initial attempt to visualize the predicted values of moral foundations where the predictor is gender equality. I chose this predictor because it was the only that was significant for both outcomes. I am glad that it worked, but it needs improvement.
