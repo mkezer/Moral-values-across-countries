@@ -235,10 +235,22 @@ c_desc %>%
 # Predictors of moral values
 Sidebar {.sidebar}
 -----------------------------------------------------------------------
+**Model**  
 I conducted a multilevel regression for each of the moral values where sex was the Level 1 predictor, the country-level variables were the Level 2 predictors, country had a random intercept, and a random slope for sex was used.
 
-R code:
-`r lmer(individualizing ~ sex + predictors + (sex | country), data = df)`
+*R code*:  
+lmer(indiv ~ sex +  
+             pop_sex_ratio + individualism +  
+             masculinity + gender_eqality +  
+             human_development_index +  
+             overall_life_satisfaction_index +   
+             (sex | country),  
+             data = df)
+             
+**Interpretation**  
+The plot describes the fixed effects for the models described above. The coefficients are unstandardized and represented by the dots. The lines represent the 95% confidence intervals.  
+
+Looking at the plot, we can see that sex, gender equality, and overall life satisfaction are the significant predictors of individualizing moral values; whereas, only gender equality is a significant predictor of binding moral values.  
 
 Column {data-width=600}
 -----------------------------------------------------------------------
@@ -323,7 +335,26 @@ both_ms <- bind_rows(m_i_fixed, m_b_fixed)
 ### Final Version
 
 ```{r}
-
+dw_plot(both_ms, 
+        dot_args = list(size = 2)
+        ) + 
+  ggtitle("Predicting moral values by sex and country-level predictors") +
+  xlab("Unstandardized Coefficient") + 
+  geom_vline(xintercept = 0, 
+             colour = "grey60", 
+             linetype = 2) + 
+  theme(plot.title = element_text(face = "bold", vjust = 3),
+        plot.title.position = "plot",
+        axis.text.y = element_text(color = "black",
+                                   size = 11),
+        legend.justification = c(0, 0), 
+        legend.position = c(.65, .85),
+        legend.background = element_rect(colour = "grey80"),
+        legend.title = element_blank(),
+        panel.grid.major.y = element_blank()
+        ) +
+  scale_x_continuous(n.breaks = 10) +
+  scale_color_manual(values = c("cornflowerblue", "#F8766D"))
 ```
 
 Column {data-width=400}
@@ -366,7 +397,7 @@ dw_plot(both_ms,
   scale_color_manual(values = c("blue", "red"))
 ```
 
-> Easier to see the points. The legend makes sense now, but still could be better.
+> Easier to see the points. The legend makes sense now, but still could be better. Colors can be improved. Also, there are too many grid lines.
 
 # Predictors of moral values for each country
 
