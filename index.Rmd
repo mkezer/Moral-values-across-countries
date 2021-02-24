@@ -27,6 +27,8 @@ library(lmerTest)
 library(colorBlindness)
 library(dotwhisker)
 library(tidytext)
+library(ggeffects)
+library(see)
 
 theme_set(theme_minimal()) # set theme
 options(scipen=999) # remove scientific notation
@@ -126,12 +128,12 @@ The first set of plots (on this page) represents the average scores for individu
 The second set of plots visualize the effect of sex and several country-level variables on the aforementioned foundations.  
 
 *Country-level variables*  
-a  
-a  
-a  
-a  
-a  
-a  
+Population Sex Ratio  
+Individualism  
+Masculinity  
+Gender Equality  
+Human Development Index  
+Overall Life Satisfaction Index  
 
 Column {data-width=600}
 -----------------------------------------------------------------------
@@ -416,8 +418,36 @@ Column {data-width=400}
 ### Initial version
 
 ```{r}
+# run the models
+model1 <- lmer(indiv ~ gender_eqality + (sex|country), data = df)
+model2 <- lmer(bind ~ gender_eqality + (sex|country), data = df)
 
+# extract the predicted values
+predicted1 <- 
+  ggpredict(model1, 
+            terms = c("gender_eqality", "country"),
+            type = "re")
+
+predicted2 <- 
+  ggpredict(model2, 
+            terms = c("gender_eqality", "country"),
+            type = "re")
+
+# plot
+ggpubr::ggarrange(
+predicted1 %>% 
+  ggplot(aes(x, predicted, color = group)) +
+  geom_line(size = 1),
+
+predicted2 %>% 
+  ggplot(aes(x, predicted, color = group)) +
+  geom_line(size = 1),
+
+common.legend = TRUE,legend = "bottom"
+) 
 ```
+
+> The initial attempt to visualize the predicted values of moral foundations where the predictor is gender equality. I chose this predictor because it was the only that was significant for both outcomes. I am glad that it worked, but it needs improvement.
 
 ### Revised version
 
