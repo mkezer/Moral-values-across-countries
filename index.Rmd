@@ -7,6 +7,15 @@ output:
 ---
 
 ```{r setup, include=FALSE}
+# global options
+knitr::opts_chunk$set(echo = FALSE,
+                      tidy = TRUE,
+                      cache = FALSE,
+                      message = FALSE, 
+                      error = FALSE, 
+                      warning = FALSE)
+
+# packages
 library(flexdashboard)
 library(here)
 library(rio)
@@ -15,8 +24,11 @@ library(magrittr)
 library(lme4)
 library(lmerTest)
 library(colorBlindness)
+library(dotwhisker)
 
-theme_set(theme_minimal())
+
+theme_set(theme_minimal(base_size = 15)) # set theme
+options(scipen=999) # remove scientific notation
 ```
 
 ```{r include = FALSE}
@@ -94,8 +106,9 @@ df %>%
                            Binding = "bind"
                            )
          )
- 
 ```
+
+
 
 
 Column {data-width=650}
