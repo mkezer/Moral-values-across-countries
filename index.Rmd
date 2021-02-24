@@ -235,10 +235,90 @@ c_desc %>%
 # Predictors of moral values
 Sidebar {.sidebar}
 -----------------------------------------------------------------------
+I conducted a multilevel regression for each of the moral values where sex was the Level 1 predictor, the country-level variables were the Level 2 predictors, country had a random intercept, and a random slope for sex was used.
 
+R code:
+`r lmer(individualizing ~ sex + predictors + (sex | country), data = df)`
 
 Column {data-width=600}
 -----------------------------------------------------------------------
+
+```{r MLM, include=FALSE}
+# merge country-level data with the main dataset
+df <- left_join(df, 
+                select(df_c, country:overall_life_satisfaction_index), 
+                by = "country")
+
+# MLM
+model_i <- lmer(indiv ~ sex + # level 1 predictor
+                  
+                  # level 2 predictors:
+                  pop_sex_ratio + individualism + masculinity + 
+                  gender_eqality + human_development_index + 
+                  overall_life_satisfaction_index + 
+                  
+                  (sex | country), # random slope for sex
+                                   # random intercept for country
+                
+                data = df
+                )
+
+model_b <- lmer(bind ~ sex + # level 1 predictor
+                  
+                  # level 2 predictors:
+                  pop_sex_ratio + individualism + masculinity + 
+                  gender_eqality + human_development_index + 
+                  overall_life_satisfaction_index + 
+                  
+                  (sex | country), # random slope for sex
+                                   # random intercept for country
+                
+                data = df
+                )
+
+sjPlot::tab_model(model_i)
+sjPlot::tab_model(model_b)
+
+# extract coefficients
+m_i_fixed <-
+broom.mixed::tidy(model_i) %>% 
+  filter(effect == "fixed",
+         term != "(Intercept)") %>% 
+  select(-c(effect, group)) %>% 
+  mutate(
+         term = recode(term,
+                       `sexMale` = "Sex",
+                       `pop_sex_ratio` = "Population Sex Ratio",
+                       `individualism` = "Individualism",
+                       `masculinity` = "Masculinity",
+                       `gender_eqality` = "Gender Equality",
+                       `human_development_index` = "Human Development Index",
+                       `overall_life_satisfaction_index` = "Overall Life Satisfaction Index"),
+         model = "Individualizing",
+  ) %>% 
+  relocate(model, term)
+
+m_b_fixed <-
+broom.mixed::tidy(model_b) %>% 
+  filter(effect == "fixed",
+         term != "(Intercept)") %>% 
+  select(-c(effect, group)) %>% 
+  mutate(
+         term = recode(term,
+                       `sexMale` = "Sex",
+                       `pop_sex_ratio` = "Population Sex Ratio",
+                       `individualism` = "Individualism",
+                       `masculinity` = "Masculinity",
+                       `gender_eqality` = "Gender Equality",
+                       `human_development_index` = "Human Development Index",
+                       `overall_life_satisfaction_index` = "Overall Life Satisfaction Index"),
+         model = "Binding",
+  ) %>% 
+  relocate(model, term)
+
+both_ms <- bind_rows(m_i_fixed, m_b_fixed)
+```
+
 
 ### Final Version
 
@@ -252,15 +332,21 @@ Column {data-width=400}
 ### Initial version
 
 ```{r}
-
+dw_plot(both_ms) + 
+  ggtitle("Predicting moral values") +
+  xlab("Unstandardized Coefficient") + 
+  geom_vline(xintercept = 0, 
+             colour = "grey60", 
+             linetype = 2)
 ```
+
+> The initial dot-whisker plot for the fixed effects. Added a vertical line, which made the plot a bit easier to interpret. However, legend looks awful. Modifying the x axis should also help.
 
 ### Revised version
 
 ```{r}
 
 ```
-
 
 # Predictors of moral values for each country
 
