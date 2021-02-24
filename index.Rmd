@@ -56,7 +56,10 @@ df %>%
             min = min(val, na.rm = TRUE),
             max = max(val, na.rm = TRUE),
             .groups = "drop"
-            )
+            ) %>% 
+  mutate(vars = stringr::str_sub(vars, end = -5), # remove the "_avg"
+         vars = stringr::str_to_title(vars)       # capitalize the names
+         )
 
 # descriptive statistics by country and sex
 c_s_desc <- 
@@ -72,9 +75,15 @@ df %>%
             min = min(val, na.rm = TRUE),
             max = max(val, na.rm = TRUE),
             .groups = "drop"
-            )
+            ) %>% 
+  mutate(vars = stringr::str_sub(vars, end = -5), 
+         vars = stringr::str_to_title(vars)       
+         )  
 ```
 
+```{r}
+
+```
 
 
 Column {data-width=650}
