@@ -26,9 +26,9 @@ library(lme4)
 library(lmerTest)
 library(colorBlindness)
 library(dotwhisker)
+library(tidytext)
 
-
-theme_set(theme_minimal(base_size = 15)) # set theme
+theme_set(theme_minimal()) # set theme
 options(scipen=999) # remove scientific notation
 ```
 
@@ -161,14 +161,40 @@ c_desc %>%
   scale_x_continuous(expand = c(0, 0))
 ```
 
-> This is the first version of the plot. There is a lot to work on here. Both axes and legend labels seem confusing. X-axis scale is also not complete.
+> This is the first version of the plot. There is a lot to work on here. Both axes and legend labels seem confusing. X-axis scale is also not complete. Also, it is hard to see any patterns without using facet_wrap and sorting the values.
 
 ### Revised version
 
 ```{r}
-
+c_desc %>% 
+  ggplot() + 
+  geom_col(
+    aes(mean, reorder_within(country, mean, vars), 
+        fill = country
+        )
+          ) + 
+  scale_y_reordered() + 
+  scale_x_continuous(expand = c(0, 0)
+                     ) +
+  facet_wrap(~vars, 
+             scales = "free_y",
+             ncol = 2) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    legend.position = "none",
+    axis.text.y = element_text(color = "black",
+                               size = 11),
+    axis.text.x = element_text(color = "black",
+                               size = 9),
+    axis.title = element_blank()
+  )  + 
+  labs(
+    title = "Endorsement of Individualizing and Binding Moral Values Across Countries"
+    )
 ```
 
+> The revised version looks much better. You can immediately see interesting patterns such as Spain's scores. The colors are not that nice, though. Also, it'd be nice to see the grand mean to have a general reference category.
 
 # Values X Country X Sex
 
