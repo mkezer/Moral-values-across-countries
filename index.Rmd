@@ -121,7 +121,7 @@ Data used in this dashboard come from the second study of XX. It's a publicly av
 
 **Summary of the Visualizations**
 
-The first set of plots (on this page) represents the average scores for individualizing and binding foundations across countries. Building on this plot, I next add the sex variable into the mix.  
+The first set of plots (on this page) represents the average scores for individualizing and binding foundations across countries. Next, building on this plot, I add the sex variable into the mix.  
 
 The second set of plots visualize the effect of sex and several country-level variables on the aforementioned foundations.  
 
@@ -139,7 +139,44 @@ Column {data-width=600}
 ### Final Version
 
 ```{r}
+gmeans <- 
+c_desc %>% 
+  group_by(vars) %>% 
+  summarise(m = mean(mean))
 
+c_desc %>% 
+  ggplot() + 
+  geom_vline(data = gmeans,
+             aes(xintercept = m), 
+             linetype = 2,
+             alpha = .6) +   
+  geom_col(
+    aes(mean, reorder_within(country, mean, vars), 
+        fill = country,
+        alpha = .9
+        )
+          ) + 
+  scale_y_reordered() + 
+  scale_x_continuous(expand = c(0, 0)
+                     ) +
+  facet_wrap(~vars, 
+             scales = "free_y",
+             ncol = 2) + 
+  theme(
+    plot.title.position = "plot",
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    legend.position = "none",
+    axis.text.y = element_text(color = "black",
+                               size = 11),
+    axis.text.x = element_text(color = "black",
+                               size = 9),
+    axis.title = element_blank()
+  )  + 
+  labs(
+    title = "Endorsement of Individualizing and Binding Moral Values Across Countries",
+    caption = "Vertical lines represent the average of all countries."
+    ) 
 ```
 
 Column {data-width=400}
@@ -169,8 +206,7 @@ c_desc %>%
 c_desc %>% 
   ggplot() + 
   geom_col(
-    aes(mean, reorder_within(country, mean, vars), 
-        fill = country
+    aes(mean, reorder_within(country, mean, vars)
         )
           ) + 
   scale_y_reordered() + 
@@ -182,7 +218,6 @@ c_desc %>%
   theme(
     panel.grid.major.y = element_blank(),
     panel.grid.minor.y = element_blank(),
-    legend.position = "none",
     axis.text.y = element_text(color = "black",
                                size = 11),
     axis.text.x = element_text(color = "black",
@@ -194,7 +229,7 @@ c_desc %>%
     )
 ```
 
-> The revised version looks much better. You can immediately see interesting patterns such as Spain's scores. The colors are not that nice, though. Also, it'd be nice to see the grand mean to have a general reference category.
+> The revised version looks much better. You can see interesting patterns such as Spain's scores. The colors are terrible, though. Also, it'd be nice to see the grand mean to have a general reference category.
 
 # Values X Country X Sex
 
