@@ -14,6 +14,9 @@ library(tidyverse)
 library(magrittr)
 library(lme4)
 library(lmerTest)
+library(colorBlindness)
+
+theme_set(theme_minimal())
 ```
 
 ```{r include = FALSE}
@@ -36,7 +39,15 @@ df %<>%
     sex = recode(sex,                       
                  `1` = "Male",
                  `0` = "Female",
-                 .default = NA_character_)
+                 .default = NA_character_),
+    
+    indiv = rowMeans(                
+      select(., harm_avg, fairness_avg) # individualizing moral foundations
+    ),
+    
+    bind = rowMeans(                 
+      select(., ingroup_avg:purity_avg) # binding moral foundations
+    )
   )
 
 # check data structure and variables
@@ -45,11 +56,11 @@ str(df)
 # descriptive statistics by country
 c_desc <- 
 df %>% 
-  select(-sex) %>% 
-  pivot_longer(cols = !country,
+  pivot_longer(cols = c(indiv, bind),
                names_to = "vars",
                values_to = "val"
                ) %>% 
+  select(country, vars, val) %>% 
   group_by(country, vars) %>% 
   summarise(mean = mean(val, na.rm = TRUE),
             sd = sd(val, na.rm = TRUE),
@@ -57,15 +68,17 @@ df %>%
             max = max(val, na.rm = TRUE),
             .groups = "drop"
             ) %>% 
-  mutate(vars = stringr::str_sub(vars, end = -5), # remove the "_avg"
-         vars = stringr::str_to_title(vars)       # capitalize the names
+  mutate(vars = fct_recode(vars,
+                           Individualizing = "indiv",
+                           Binding = "bind"
+                           )
          )
 
 # descriptive statistics by country and sex
 c_s_desc <- 
 df %>% 
   filter(country != "Poland") %>%            # Poland has missing data in sex.
-  pivot_longer(cols = ends_with("avg"),
+  pivot_longer(cols = c(indiv, bind),
                names_to = "vars",
                values_to = "val"
                ) %>% 
@@ -76,13 +89,12 @@ df %>%
             max = max(val, na.rm = TRUE),
             .groups = "drop"
             ) %>% 
-  mutate(vars = stringr::str_sub(vars, end = -5), 
-         vars = stringr::str_to_title(vars)       
-         )  
-```
-
-```{r}
-
+  mutate(vars = fct_recode(vars,
+                           Individualizing = "indiv",
+                           Binding = "bind"
+                           )
+         )
+ 
 ```
 
 
