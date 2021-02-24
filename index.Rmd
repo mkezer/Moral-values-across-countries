@@ -402,6 +402,14 @@ dw_plot(both_ms,
 > Easier to see the points. The legend makes sense now, but still could be better. Colors can be improved. Also, there are too many grid lines.
 
 # Predictors of moral values for each country
+Sidebar {.sidebar}
+-----------------------------------------------------------------------
+On this page, I visualize the predicted values of individualizing and binding moral values. Based on the earlier analysis conducted in the "Predictors of moral values" section, I only focus gender equality as the predictor. In fact, I reran the model as follows:  
+
+lmer(indiv ~ gender_eqality +  
+             (sex | country),  
+             data = df)  
+
 
 Column {data-width=600}
 -----------------------------------------------------------------------
