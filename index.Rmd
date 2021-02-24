@@ -8,7 +8,26 @@ output:
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
+library(here)
+library(rio)
+library(tidyverse)
+library(magrittr)
+library(lme4)
+library(lmerTest)
 ```
+
+```{r include = FALSE}
+# import data
+df <- import(here("data", "ALL_MFQ30.csv"),     # moral values, countries, & sex
+             setclass = "tbl_df") %>% 
+  janitor::clean_names()
+
+df_c <- import(here("data", "Data_S1_sec.csv"), # country-level variables
+               setclass = "tbl_df") %>% 
+  janitor::clean_names()
+```
+
+
 
 Column {data-width=650}
 -----------------------------------------------------------------------
