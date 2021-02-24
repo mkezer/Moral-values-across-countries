@@ -148,8 +148,20 @@ Column {data-width=400}
 ### Initial version
 
 ```{r}
-
+c_desc %>% 
+  ggplot() + 
+  geom_col(
+    aes(mean, country, fill = vars),
+    position = "dodge"
+  ) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.y = element_blank()
+  ) + 
+  scale_x_continuous(expand = c(0, 0))
 ```
+
+> This is the first version of the plot. There is a lot to work on here. Both axes and legend labels seem confusing. X-axis scale is also not complete.
 
 ### Revised version
 
