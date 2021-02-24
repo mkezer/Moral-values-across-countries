@@ -28,11 +28,12 @@ df_c <- import(here("data", "Data_S1_sec.csv"), # country-level variables
 
 # data wrangling
 df %<>% 
+  drop_na() %>%                             
   mutate(
-    across(where(is.double), as.numeric),   # from double to numeric
-    across(where(is.character), as.factor), # from character to factor
+    across(where(is.double), as.numeric),   
+    across(where(is.character), as.factor), 
     
-    sex = recode(sex,                       # recode sex variable
+    sex = recode(sex,                       
                  `1` = "Male",
                  `0` = "Female",
                  .default = NA_character_)
@@ -41,6 +42,37 @@ df %<>%
 # check data structure and variables
 str(df)
 
+# descriptive statistics by country
+c_desc <- 
+df %>% 
+  select(-sex) %>% 
+  pivot_longer(cols = !country,
+               names_to = "vars",
+               values_to = "val"
+               ) %>% 
+  group_by(country, vars) %>% 
+  summarise(mean = mean(val, na.rm = TRUE),
+            sd = sd(val, na.rm = TRUE),
+            min = min(val, na.rm = TRUE),
+            max = max(val, na.rm = TRUE),
+            .groups = "drop"
+            )
+
+# descriptive statistics by country and sex
+c_s_desc <- 
+df %>% 
+  filter(country != "Poland") %>%            # Poland has missing data in sex.
+  pivot_longer(cols = ends_with("avg"),
+               names_to = "vars",
+               values_to = "val"
+               ) %>% 
+  group_by(country, sex, vars) %>% 
+  summarise(mean = mean(val, na.rm = TRUE),
+            sd = sd(val, na.rm = TRUE),
+            min = min(val, na.rm = TRUE),
+            max = max(val, na.rm = TRUE),
+            .groups = "drop"
+            )
 ```
 
 
