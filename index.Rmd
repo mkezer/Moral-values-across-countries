@@ -455,6 +455,30 @@ ggpubr::ggarrange(p1, p2,
 ### Revised version
 
 ```{r}
+p1 <-
+p1 + 
+  labs(x = "Gender Equality",
+       y = "Individualizing",
+       color = "Country") +
+  theme(axis.text = element_text(size = 10,
+                                 colour = "black"))
 
+p2 <-
+p2 + 
+  labs(x = "Gender Equality",
+       y = "Binding",
+       color = "Country") +
+  theme(axis.text = element_text(size = 10,
+                                 colour = "black"))
+
+ggpubr::ggarrange(p1, p2,
+                  common.legend = TRUE,
+                  legend = "bottom"
+                 ) 
 ```
+
+> This version is better, but it would be nicer to see which countries are at the top, middle, and bottom of the plot.
+
+
+
 
