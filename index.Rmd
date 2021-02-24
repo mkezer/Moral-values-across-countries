@@ -409,7 +409,36 @@ Column {data-width=600}
 ### Final Version
 
 ```{r}
+p11 <- 
+  predicted1 %>% 
+  ggplot(aes(x, predicted, color = group)) +
+  geom_line(size = 1) +
+  labs(x = "Gender Equality",
+       y = "Individualizing",
+       color = "Country") +
+  theme(axis.text = element_text(size = 10,
+                                 colour = "black")
+        ) +
+  gghighlight::gghighlight(group %in% c("Poland", "Netherlands", "Hungary"))
 
+p21 <- 
+  predicted2 %>% 
+  ggplot(aes(x, predicted, color = group)) +
+  geom_line(size = 1) +
+  labs(x = "Gender Equality",
+       y = "Binding",
+       color = "Country") +
+  theme(axis.text = element_text(size = 10,
+                                 colour = "black")
+        ) +
+  gghighlight::gghighlight(group %in% c("Poland", "Netherlands", "Spain"))
+
+ggpubr::ggarrange(p11, p21,
+                  common.legend = TRUE,
+                  legend = "bottom")  %>%  
+  ggpubr::annotate_figure(
+    top = ggpubr::text_grob("Countries at the top, middle, and bottom")
+    )
 ```
 
 Column {data-width=400}
