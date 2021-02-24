@@ -25,6 +25,22 @@ df <- import(here("data", "ALL_MFQ30.csv"),     # moral values, countries, & sex
 df_c <- import(here("data", "Data_S1_sec.csv"), # country-level variables
                setclass = "tbl_df") %>% 
   janitor::clean_names()
+
+# data wrangling
+df %<>% 
+  mutate(
+    across(where(is.double), as.numeric),   # from double to numeric
+    across(where(is.character), as.factor), # from character to factor
+    
+    sex = recode(sex,                       # recode sex variable
+                 `1` = "Male",
+                 `0` = "Female",
+                 .default = NA_character_)
+  )
+
+# check data structure and variables
+str(df)
+
 ```
 
 
