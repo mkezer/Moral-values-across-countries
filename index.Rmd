@@ -4,7 +4,6 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
-    social: menu
     source_code: embed
 ---
 
@@ -111,53 +110,162 @@ df %>%
 ```
 
 
-# Data & Summary {data-orientation=rows}
+# Values X Country
 
 Sidebar {.sidebar}
--------------------------------
-**Data**
+-----------------------------------------------------------------------
+**Data**  
 Data used in this dashboard come from the second study of XX. It's a publicly available dataset, which can be downloaded from XX.
 
 19 countries.
 
-**Summary of Visualizations**
+**Summary of the Visualizations**
 
-The first set of plots represents the average scores for individualizing and binding foundations across countries. Building on this plot, I next add the sex variable into the mix.  
+The first set of plots (on this page) represents the average scores for individualizing and binding foundations across countries. Building on this plot, I next add the sex variable into the mix.  
 
 The second set of plots visualize the effect of sex and several country-level variables on the aforementioned foundations.  
 
-*Country-level variables*
-a
-a
-a
-a
-a
-a
+*Country-level variables*  
+a  
+a  
+a  
+a  
+a  
+a  
 
-
-Row {data-height=600}
-
-Column {data-width=650}
+Column {data-width=600}
 -----------------------------------------------------------------------
 
-### Chart A
+### Final Version
 
 ```{r}
 
 ```
 
-Column {data-width=350}
+Column {data-width=400}
 -----------------------------------------------------------------------
 
-### Chart B
+### Initial version
 
 ```{r}
 
 ```
 
-### Chart C
+### Revised version
 
 ```{r}
 
 ```
 
+
+# Values X Country X Sex
+
+Column {data-width=600}
+-----------------------------------------------------------------------
+
+### Final Version
+
+```{r}
+
+```
+
+Column {data-width=400}
+-----------------------------------------------------------------------
+
+### Initial version
+
+```{r}
+
+```
+
+### Revised version
+
+```{r}
+
+```
+
+
+# Predictors of values
+Sidebar {.sidebar}
+-----------------------------------------------------------------------
+
+
+Column {data-width=600}
+-----------------------------------------------------------------------
+
+### Final Version
+
+```{r}
+
+```
+
+Column {data-width=400}
+-----------------------------------------------------------------------
+
+### Initial version
+
+```{r}
+
+```
+
+### Revised version
+
+```{r}
+
+```
+
+
+# Predictors of values for each country
+
+Column {data-width=600}
+-----------------------------------------------------------------------
+
+### Final Version
+
+```{r}
+
+```
+
+Column {data-width=400}
+-----------------------------------------------------------------------
+
+### Initial version
+
+```{r}
+
+```
+
+### Revised version
+
+```{r}
+
+```
+
+
+# Bonus plots
+Sidebar {.sidebar}
+-----------------------------------------------------------------------
+
+Column {data-width=600}
+-----------------------------------------------------------------------
+
+### Final Version
+
+```{r}
+
+```
+
+Column {data-width=400}
+-----------------------------------------------------------------------
+
+### Initial version
+
+```{r}
+
+```
+
+### Revised version
+
+```{r}
+
+```
