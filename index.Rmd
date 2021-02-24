@@ -231,34 +231,8 @@ c_desc %>%
 
 > The revised version looks much better. You can see interesting patterns such as Spain's scores. The colors are terrible, though. Also, it'd be nice to see the grand mean to have a general reference category.
 
-# Values X Country X Sex
 
-Column {data-width=600}
------------------------------------------------------------------------
-
-### Final Version
-
-```{r}
-
-```
-
-Column {data-width=400}
------------------------------------------------------------------------
-
-### Initial version
-
-```{r}
-
-```
-
-### Revised version
-
-```{r}
-
-```
-
-
-# Predictors of values
+# Predictors of moral values
 Sidebar {.sidebar}
 -----------------------------------------------------------------------
 
@@ -288,7 +262,7 @@ Column {data-width=400}
 ```
 
 
-# Predictors of values for each country
+# Predictors of moral values for each country
 
 Column {data-width=600}
 -----------------------------------------------------------------------
