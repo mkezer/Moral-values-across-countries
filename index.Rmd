@@ -6,6 +6,8 @@ output:
     vertical_layout: fill
     source_code: embed
     theme: united
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -182,6 +184,8 @@ c_desc %>%
     ) 
 ```
 
+*Marvelous work! I LOVE the use of colors in this figure, it makes sense without imposing a "rainbow order" effect. Your code is incredibly clean and efficient, I'm a big fan of how your vizualizations have evolved over this project. My only question as a reader would be what the x-axis numbers signify - are they a score out of X? Otherwise, this is very legible!* 
+
 Column {data-width=400}
 -----------------------------------------------------------------------
 
@@ -334,11 +338,12 @@ broom.mixed::tidy(model_b) %>%
 both_ms <- bind_rows(m_i_fixed, m_b_fixed)
 ```
 
+*I'm a huge fan of how you cleaned the MLM - I've struggling a LOT in cleaning a MLM to visualize and really appreciate your workflow*
 
 ### Final Version
 
 ```{r}
-dw_plot(both_ms, 
+dwplot(both_ms, 
         dot_args = list(size = 2)
         ) + 
   ggtitle("Predicting moral values by sex and country-level predictors") +
@@ -359,6 +364,8 @@ dw_plot(both_ms,
   scale_x_continuous(n.breaks = 10) +
   scale_color_manual(values = c("cornflowerblue", "#F8766D"))
 ```
+
+*This is a great plot, the only note (and it may be my problem) is that my version of dotwhisker uses dwplot() and doesn't recognize dw_plot() that you had above. I don't know enough about this package to figure out why I got an error with your version, but I've changed it here in order to run the plots. Otherwise, it's incredibly clear and much more easy to read than a results table!*
 
 Column {data-width=400}
 -----------------------------------------------------------------------
@@ -465,6 +472,8 @@ ggpubr::ggarrange(p11, p21,
     )
 ```
 
+*I also really enjoy this plot - choosing the top, middle, and bottom country for each was a great way to simplify the amount of information a reader needed to sift through. In the final version, I wonder if it may be helpful to see a table of these outputs that includes all the countries so that we can anchor onto the top countries in order to visualize other countries. Otherwise, this does a very good job at contrasting the relationships in quesiton, which I find very useful!*
+
 Column {data-width=400}
 -----------------------------------------------------------------------
 
@@ -517,6 +526,6 @@ ggpubr::ggarrange(p1, p2,
 
 > This version is better, but it would be nicer to see which countries are at the top, middle, and bottom of the plot.
 
+*Hi Murat, I love this project - your flextable is clean and professional looking, and the writing you did to accompany each figure was masterfully done in helping improve the meaning/impact of each figure. I've outlined a couple comments above, but all-in-all this is exquisitely done!*
 
-
-
+*The biggest thing I learned from you was your workflow for cleanign MLM output for putting in a table/figure - I noted it above, but I've struggled with this, and your code was elegant in it's efficacy!*
