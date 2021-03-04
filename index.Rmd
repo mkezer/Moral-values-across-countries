@@ -30,6 +30,7 @@ library(dotwhisker)
 library(tidytext)
 library(ggeffects)
 library(see)
+library(dplyr) #needed for dwplot
 
 theme_set(theme_minimal()) # set theme
 options(scipen=999) # remove scientific notation
@@ -338,7 +339,7 @@ both_ms <- bind_rows(m_i_fixed, m_b_fixed)
 ### Final Version
 
 ```{r}
-dw_plot(both_ms, 
+dwplot(both_ms, #wouldn't load the plot without the delection of the underscore between dw and plot
         dot_args = list(size = 2)
         ) + 
   ggtitle("Predicting moral values by sex and country-level predictors") +
@@ -366,7 +367,7 @@ Column {data-width=400}
 ### Initial version
 
 ```{r}
-dw_plot(both_ms) + 
+dwplot(both_ms) + #wouldn't load the plot without the delection of the underscore between dw and plot
   ggtitle("Predicting moral values") +
   xlab("Unstandardized Coefficient") + 
   geom_vline(xintercept = 0, 
@@ -379,7 +380,7 @@ dw_plot(both_ms) +
 ### Revised version
 
 ```{r}
-dw_plot(both_ms, 
+dwplot(both_ms, #wouldn't load the plot without the delection of the underscore between dw and plot
         dot_args = list(size = 2)
         ) + 
   ggtitle("Predicting moral values by sex and country-level predictors") +
