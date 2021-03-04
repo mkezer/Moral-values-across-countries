@@ -179,7 +179,12 @@ c_desc %>%
   labs(
     title = "Endorsement of Individualizing and Binding Moral Values Across Countries",
     caption = "Vertical lines represent the average of all countries."
-    ) 
+    )
+
+
+#Colorizing each country may be is fine, but it kind of defeats its own purpose when there are over 20 individualized colors... I believe grouping countries based on their regions (e.g. Europe, Asia, North America, and etc) will improve interpretability of your plot by a lot! In Lab 3, we used colors to highlight the region of USA each state is from.
+
+
 ```
 
 Column {data-width=400}
@@ -338,7 +343,7 @@ both_ms <- bind_rows(m_i_fixed, m_b_fixed)
 ### Final Version
 
 ```{r}
-dw_plot(both_ms, 
+dwplot(both_ms, 
         dot_args = list(size = 2)
         ) + 
   ggtitle("Predicting moral values by sex and country-level predictors") +
@@ -358,6 +363,12 @@ dw_plot(both_ms,
         ) +
   scale_x_continuous(n.breaks = 10) +
   scale_color_manual(values = c("cornflowerblue", "#F8766D"))
+
+#Great job! That said, I had an error with dw_plot() command for some reason... dwplot() works fine so I made some adjustments accordingly. 
+
+#I assume this visualizations cater to scholaristic audiences, so it would also be helpful to add APA style summaries of the regression analyses in another tab. 
+
+
 ```
 
 Column {data-width=400}
@@ -366,7 +377,7 @@ Column {data-width=400}
 ### Initial version
 
 ```{r}
-dw_plot(both_ms) + 
+dwplot(both_ms) + 
   ggtitle("Predicting moral values") +
   xlab("Unstandardized Coefficient") + 
   geom_vline(xintercept = 0, 
@@ -379,7 +390,7 @@ dw_plot(both_ms) +
 ### Revised version
 
 ```{r}
-dw_plot(both_ms, 
+dwplot(both_ms, 
         dot_args = list(size = 2)
         ) + 
   ggtitle("Predicting moral values by sex and country-level predictors") +
@@ -463,6 +474,12 @@ ggpubr::ggarrange(p11, p21,
   ggpubr::annotate_figure(
     top = ggpubr::text_grob("Countries at the top, middle, and bottom")
     )
+
+#The slope for the right side seems steeper, but I think it could be because the minimum and maximum values of y axis are set different for these tables. What about using the same values (min 2 and max 4, 0.5 increment each) for both tables?
+
+#Similarly to the suggestion I made for prior plots, but could you group_by() and summarize() averages of these countries into regions (e.g. Europe, Asia, and etc)? That way we need to worry less about which countries to hightlight!
+
+
 ```
 
 Column {data-width=400}
