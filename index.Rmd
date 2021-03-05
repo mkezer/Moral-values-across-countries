@@ -391,7 +391,7 @@ df <- left_join(df,
                 by = "country")
 
 # MLM
-model_i <- lmer(indiv ~ sex + # level 1 predictor
+model_i <- lmer(indiv ~ relevel(sex, ref = 2) + # level 1 predictor
                   
                   # level 2 predictors:
                   pop_sex_ratio + individualism + masculinity + 
@@ -404,7 +404,7 @@ model_i <- lmer(indiv ~ sex + # level 1 predictor
                 data = df
                 )
 
-model_b <- lmer(bind ~ sex + # level 1 predictor
+model_b <- lmer(bind ~ relevel(sex, ref = 2) + # level 1 predictor
                   
                   # level 2 predictors:
                   pop_sex_ratio + individualism + masculinity + 
@@ -428,7 +428,7 @@ broom.mixed::tidy(model_i) %>%
   select(-c(effect, group)) %>% 
   mutate(
          term = recode(term,
-                       `sexMale` = "Sex",
+                       `relevel(sex, ref = 2)Female` = "Sex [Female]",
                        `pop_sex_ratio` = "Population Sex Ratio",
                        `individualism` = "Individualism",
                        `masculinity` = "Masculinity",
@@ -446,7 +446,7 @@ broom.mixed::tidy(model_b) %>%
   select(-c(effect, group)) %>% 
   mutate(
          term = recode(term,
-                       `sexMale` = "Sex",
+                       `relevel(sex, ref = 2)Female` = "Sex [Female]",
                        `pop_sex_ratio` = "Population Sex Ratio",
                        `individualism` = "Individualism",
                        `masculinity` = "Masculinity",
@@ -529,25 +529,82 @@ Column {.tabset .tabset-fade data-width=400}
 ### About  
 
 **Model**  
-I conducted a multilevel regression for each of the moral values where sex was the Level 1 predictor, the country-level variables were the Level 2 predictors, country had a random intercept, and a random slope for sex was used.
-
-*R code*:  
-lmer(indiv ~ sex +  
-             pop_sex_ratio + individualism +  
-             masculinity + gender_eqality +  
-             human_development_index +  
-             overall_life_satisfaction_index +   
-             (sex | country),  
-             data = df)
+I conducted a multilevel regression for each of the moral values where sex was the Level 1 predictor, the country-level variables were the Level 2 predictors, country had a random intercept, and a random slope for sex was used.  
              
 **Interpretation**  
+  
 The plot describes the fixed effects for the models described above. The coefficients are unstandardized and represented by the dots. The lines represent the 95% confidence intervals.  
 
 Looking at the plot, we can see that sex, gender equality, and overall life satisfaction are the significant predictors of individualizing moral values; whereas, only gender equality is a significant predictor of binding moral values.  
 
-**Findings**
+**Findings**  
+  
 ```{r}
-both_ms
+table <- 
+  bind_cols(
+    
+    subset(both_ms, model == "Individualizing",
+           select = c(term:std.error, p.value)
+           ),
+    
+    subset(both_ms, model == "Binding",
+           select = c(term:std.error, p.value)
+           )    
+  ) %>% 
+  rename(
+    term1 = 1, term2 = 5,
+    est1 = 2, est2 = 6,
+    se1 = 3, se2 = 7,
+    p1 = 4, p2 = 8
+  )
+
+table %>% 
+  select(-term2) %>% 
+  mutate(gr = c("Level 1", rep("Level 2", 6))) %>% 
+  group_by(gr) %>% 
+  gt() %>% 
+  tab_header(
+    title = "Predicting Individualizing and Binding Moral Values",
+    subtitle = "Across 19 Countries"
+  ) %>% 
+  cols_label(term1 = "",
+             est1 = md("*B*"),
+             se1 = "SE",
+             p1 = "p",
+             est2 = md("*B*"),
+             se2 = "SE",
+             p2 = "p") %>% 
+  tab_spanner(
+    label = "Individualizing",
+    columns = vars(est1, se1, p1)
+  ) %>% 
+  tab_spanner(
+    label = "Binding",
+    columns = vars(est2, se2, p2)
+  ) %>% 
+  fmt_number(columns = vars(est1, se1,
+                            est2, se2),
+             decimals = 2) %>% 
+  fmt_number(columns = vars(p1, p2),
+             decimals = 4
+             ) %>% 
+  cols_align(
+    columns = "term1",
+    align = "right"
+  ) %>% 
+  opt_row_striping() %>% 
+  tab_options(
+    heading.background.color = "#9f939c"
+    ) %>% 
+  tab_style(
+    style = list(
+      cell_text(weight = "bold")
+    ),
+    locations = cells_body(
+      columns = vars(p1),
+      rows = p1 < .05
+    )
+  )
 ```
 
 
