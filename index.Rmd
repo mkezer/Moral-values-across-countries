@@ -175,7 +175,9 @@ c_desc %>%
                                 "Neither Agree\nNor Disagree",
                                 "Strongly\nAgree")
                      ) +
-  facet_wrap(~vars, 
+  facet_wrap(~factor(vars,
+                     levels = c("Individualizing",
+                                "Binding")), 
              scales = "free_y",
              ncol = 2) + 
   theme(
