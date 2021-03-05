@@ -221,7 +221,7 @@ Column {.tabset .tabset-fade data-width=400}
 ### About
 This plot visualizes the average scores for individualizing and binding foundations across countries.  
 
-The values on the x-axis ranges from 0 (i.e., Strongly Disagree) to 5 (i.e., Strongly Agree).  
+The values on the x-axis range from 0 (i.e., Strongly Disagree) to 5 (i.e., Strongly Agree).  
 
 The final version was improved by (1) modifying the x-axis and (2) explaining the meaning of the colors (i.e., each color represents a country).
 
