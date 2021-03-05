@@ -545,13 +545,13 @@ Looking at the plot, we can see that sex, gender equality, and overall life sati
 table <- 
   bind_cols(
     
-    subset(both_ms, model == "Individualizing",
+    subset(both_ms, model == "Binding",
            select = c(term:std.error, p.value)
            ),
     
-    subset(both_ms, model == "Binding",
+    subset(both_ms, model == "Individualizing",
            select = c(term:std.error, p.value)
-           )    
+           )
   ) %>% 
   rename(
     term1 = 1, term2 = 5,
@@ -577,11 +577,11 @@ table %>%
              se2 = "SE",
              p2 = "p") %>% 
   tab_spanner(
-    label = "Individualizing",
+    label = "Binding",
     columns = vars(est1, se1, p1)
   ) %>% 
   tab_spanner(
-    label = "Binding",
+    label = "Individualizing",
     columns = vars(est2, se2, p2)
   ) %>% 
   fmt_number(columns = vars(est1, se1,
