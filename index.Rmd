@@ -25,12 +25,11 @@ library(tidyverse)
 library(magrittr)
 library(lme4)
 library(lmerTest)
-library(colorBlindness)
 library(dotwhisker)
 library(tidytext)
 library(ggeffects)
-library(see)
 library(htmlwidgets)
+library(gt)
 
 theme_set(theme_minimal()) # set theme
 options(scipen = 999) # remove scientific notation
@@ -465,26 +464,64 @@ both_ms <- bind_rows(m_i_fixed, m_b_fixed)
 ### **Final Version**
 
 ```{r}
-dwplot(both_ms, 
-        dot_args = list(size = 2)
-        ) + 
-  ggtitle("Predicting moral values by sex and country-level predictors") +
-  xlab("Unstandardized Coefficient") + 
+ggplot() + 
+  
   geom_vline(xintercept = 0, 
              colour = "grey60", 
-             linetype = 2) + 
+             linetype = 2) +  
+  
+  geom_errorbarh(data = filter(both_ms, model == "Individualizing"),
+                 aes(xmin = estimate - 1.96*std.error,
+                     xmax = estimate + 1.96*std.error,
+                     y = term,
+                     color = "Individualizing"),
+                 position = position_nudge(y = -.1),
+                 height = 0
+                 ) +
+  
+  geom_point(data = filter(both_ms, model == "Individualizing"),
+             aes(estimate, term, color = "Individualizing"),
+             position = position_nudge(y = -.1),
+             size = 1.75
+             ) +
+  
+  geom_errorbarh(data = filter(both_ms, model == "Binding"),
+                 aes(xmin = estimate - 1.96*std.error,
+                     xmax = estimate + 1.96*std.error,
+                     y = term,
+                     color = "Binding"),
+                 position = position_nudge(y = .1),
+                 height = 0
+                 ) +
+  
+  geom_point(data = filter(both_ms, model == "Binding"),
+             aes(estimate, term, color = "Binding"),
+             position = position_nudge(y = .1),
+             size = 1.75
+             ) + 
+  
+  scale_color_manual(name = "",
+                     values = c("Individualizing" = "cornflowerblue",
+                                "Binding" = "#F8766D")
+                     ) +
+  
+  scale_x_continuous(n.breaks = 10) +
+  
   theme(plot.title = element_text(face = "bold", vjust = 3),
         plot.title.position = "plot",
         axis.text.y = element_text(color = "black",
                                    size = 11),
+        axis.title.y = element_blank(),
         legend.justification = c(0, 0), 
         legend.position = c(.65, .85),
-        legend.background = element_rect(colour = "gray80"),
+        legend.background = element_rect(colour = "grey80"),
         legend.title = element_blank(),
         panel.grid.major.y = element_blank()
-        ) +
-  scale_x_continuous(n.breaks = 10) +
-  scale_color_manual(values = c("cornflowerblue", "#F8766D"))
+        )  +
+  
+  labs(title = "Predicting moral values by sex and country-level predictors",
+       x = "Unstandardized Coefficient")
+  
 ```
 
 Column {.tabset .tabset-fade data-width=400}
@@ -507,6 +544,13 @@ lmer(indiv ~ sex +
 The plot describes the fixed effects for the models described above. The coefficients are unstandardized and represented by the dots. The lines represent the 95% confidence intervals.  
 
 Looking at the plot, we can see that sex, gender equality, and overall life satisfaction are the significant predictors of individualizing moral values; whereas, only gender equality is a significant predictor of binding moral values.  
+
+**Findings**
+```{r}
+both_ms
+```
+
+
 
 ### Version 1
 
