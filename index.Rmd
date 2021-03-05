@@ -190,8 +190,10 @@ c_desc %>%
                                 "Strongly\nAgree")
                      ) +
   facet_wrap(~factor(vars,
-                     levels = c("Individualizing",
-                                "Binding")), 
+                     levels = c("Binding",
+                                "Individualizing"
+                                )
+                     ), 
              scales = "free_y",
              ncol = 2) + 
   theme(
