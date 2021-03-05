@@ -157,7 +157,10 @@ c_desc %>%
   geom_vline(data = gmeans,
              aes(xintercept = m), 
              linetype = 2,
-             alpha = .6) +   
+             alpha = .6) + 
+  geom_hline(aes(yintercept = 0.5),
+             alpha = .6,
+             color = "gray80") +
   geom_col(
     aes(mean, reorder_within(country, mean, vars), 
         fill = country,
@@ -165,7 +168,12 @@ c_desc %>%
         )
           ) + 
   scale_y_reordered() + 
-  scale_x_continuous(expand = c(0, 0)
+  scale_x_continuous(expand = c(0, 0),
+                     limits = c(0, 5),
+                     breaks = c(0, 2.5, 5),
+                     labels = c("Strongly\nDisagree",
+                                "Neither Agree\nNor Disagree",
+                                "Strongly\nAgree")
                      ) +
   facet_wrap(~vars, 
              scales = "free_y",
@@ -178,12 +186,17 @@ c_desc %>%
     axis.text.y = element_text(color = "black",
                                size = 11),
     axis.text.x = element_text(color = "black",
-                               size = 9),
-    axis.title = element_blank()
+                               size = 8,
+                               hjust = .9,
+                               vjust = 1),
+    axis.title = element_blank(),
+    strip.background.x = element_rect(color = "gray80",
+                                      size = 1),
+    strip.text.x = element_text(face = "bold")
   )  + 
   labs(
     title = "Endorsement of Individualizing and Binding Moral Values Across Countries",
-    caption = "Vertical lines represent the average of all countries."
+    caption = "\n\nDashed lines represent the average of all countries.\nColors represent the countries."
     ) 
 ```
 
