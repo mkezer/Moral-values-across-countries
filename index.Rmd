@@ -140,6 +140,13 @@ Moral foundations theory [(Graham et al., 2013)](https://doi.org/10.1016/B978-0-
 
 *Binding* values encompass moral foundations of loyalty (i.e., standing with your group, family, nation), authority (i.e., submitting to tradition and legitimate authority), and purity (i.e., abhorrence for disgusting things, foods, actions).  
 
+**Example Items**  
+
+Please read the following sentences and indicate your agreement or disagreement:  
+
+Individualizing: Compassion for those who are suffering is the most crucial virtue.  
+
+Binding: People should be loyal to their family members, even when they have done something wrong.  
 
 Column {data-width=600}
 -----------------------------------------------------------------------
