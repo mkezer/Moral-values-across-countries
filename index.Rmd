@@ -161,25 +161,33 @@ c_desc %>%
 
 c_desc %>% 
   ggplot() + 
-  geom_vline(data = gmeans,
-             aes(xintercept = m), 
-             linetype = 2,
-             alpha = .6) + 
+  geom_vline(
+    data = gmeans,
+    aes(xintercept = m), 
+    linetype = 2,
+    alpha = .6
+            ) + 
+  geom_vline(
+    data = data.frame(x = seq(0,5,1)),
+    aes(xintercept = x),
+        color = "gray80",
+        alpha = .6
+             ) +
   geom_hline(aes(yintercept = 0.5),
              alpha = .6,
              color = "gray80") +
   geom_col(
     aes(mean, reorder_within(country, mean, vars), 
-        fill = country,
-        alpha = .9
-        )
+        fill = country
+        ),
+    alpha = .7,
+    position = position_nudge(y = -0.05)
           ) + 
   scale_y_reordered() + 
-  scale_x_continuous(expand = c(0, 0),
+  scale_x_continuous(expand = c(0, 0.32),
                      limits = c(0, 5),
-                     breaks = c(0, 2.5, 5),
+                     breaks = c(0, 5),
                      labels = c("Strongly\nDisagree",
-                                "Neither Agree\nNor Disagree",
                                 "Strongly\nAgree")
                      ) +
   facet_wrap(~factor(vars,
@@ -189,15 +197,14 @@ c_desc %>%
              ncol = 2) + 
   theme(
     plot.title.position = "plot",
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor.y = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
     legend.position = "none",
     axis.text.y = element_text(color = "black",
                                size = 11),
     axis.text.x = element_text(color = "black",
                                size = 8,
-                               hjust = .9,
-                               vjust = 1),
+                               hjust = .5),
     axis.title = element_blank(),
     strip.background.x = element_rect(color = "gray80",
                                       size = 1),
@@ -213,6 +220,8 @@ Column {.tabset .tabset-fade data-width=400}
 -----------------------------------------------------------------------
 ### About
 This plot visualizes the average scores for individualizing and binding foundations across countries.  
+
+The values on the x-axis ranges from 0 (i.e., Strongly Disagree) to 5 (i.e., Strongly Agree).  
 
 The final version was improved by (1) modifying the x-axis and (2) explaining the meaning of the colors (i.e., each color represents a country).
 
