@@ -30,9 +30,10 @@ library(dotwhisker)
 library(tidytext)
 library(ggeffects)
 library(see)
+library(htmlwidgets)
 
 theme_set(theme_minimal()) # set theme
-options(scipen=999) # remove scientific notation
+options(scipen = 999) # remove scientific notation
 ```
 
 ```{r wrangling, include = FALSE}
@@ -115,20 +116,15 @@ df %>%
 
 # Values X Country
 
-Sidebar {.sidebar}
+Background {.sidebar}
 -----------------------------------------------------------------------
 **Data**  
-Data used in this dashboard come from the second study of [Atari et al. (2020)](http://dx.doi.org/10.1098/rspb.2020.1201). It's a publicly available dataset, which can be downloaded from [Kaggle](https://www.kaggle.com/tunguz/sex-differences-in-moral-judgements-67-countries).  
+Data used in this dashboard come from the second study of [Atari et al. (2020)](http://dx.doi.org/10.1098/rspb.2020.1201), which can be downloaded from [Kaggle](https://www.kaggle.com/tunguz/sex-differences-in-moral-judgements-67-countries).  
 
-This study has data on moral values in 19 countries. There is also a second dataset with countr-level variables (see below for the list of the variables).  
+This study has data on moral values in 19 countries. There is also a second dataset with country-level variables.
 
-**Summary of the Visualizations**
-
-The first set of plots (on this page) represents the average scores for individualizing and binding foundations across countries.  
-
-The second and third set of plots visualize the effect of sex and several country-level variables on the aforementioned foundations.  
-
-*Country-level variables*  
+**Country-level variables**  
+  
 Population Sex Ratio  
 Individualism  
 Masculinity  
@@ -136,10 +132,19 @@ Gender Equality
 Human Development Index  
 Overall Life Satisfaction Index  
 
+**Definitions**
+
+Moral foundations theory [(Graham et al., 2013)](https://doi.org/10.1016/B978-0-12-407236-7.00002-4) argues that there are five universal moral values. These five values have been grouped into two overarching moral values [(Graham et al., 2009)](http://dx.doi.org/10.1037/a0015141) as individualizing and binding moral values.  
+
+*Individualizing* values encompass moral foundations of care (i.e., cherishing and protecting others) and fairness (i.e., rendering justice according to shared rules).  
+
+*Binding* values encompass moral foundations of loyalty (i.e., standing with your group, family, nation), authority (i.e., submitting to tradition and legitimate authority), and purity (i.e., abhorrence for disgusting things, foods, actions).  
+
+
 Column {data-width=600}
 -----------------------------------------------------------------------
 
-### Final Version
+### **Final Version**
 
 ```{r}
 gmeans <- 
@@ -182,10 +187,47 @@ c_desc %>%
     ) 
 ```
 
-Column {data-width=400}
+Column {.tabset .tabset-fade data-width=400}
 -----------------------------------------------------------------------
+### About
+This plot visualizes the average scores for individualizing and binding foundations across countries.  
 
-### Initial version
+The final version was improved by (1) modifying the x-axis and (2) explaining the meaning of the colors (i.e., each color represents a country).
+
+One interesting pattern can be seen for Spain. While Spain rates the highest in individualizing values, it rates the lowest in binding values.
+  
+Click on the tabs to see the evolution of the final version of this plot.  
+
+**Descriptive Statistics**  
+  
+The table below represents the average scores (i.e., mean) for each country as well as standard deviations, minimum and maximum values.  
+
+
+```{r}
+DT::datatable(c_desc,
+              colnames = c("Country", "Moral Value",
+                           "Mean", "SD", "Min", "Max"),
+              rownames = FALSE,
+              filter = "none",
+              options = list(scrollX = TRUE,
+                             searching = FALSE,
+                             columnDefs = list(list(className = "dt-center",
+                                                    width = "75px",
+                                                    targets = "_all")
+                                               ),
+                             lengthChange = FALSE,
+                               initComplete = JS(
+                               "function(settings, json) {",
+                               "$(this.api().table().header()).css({'background-color': '#9f939c', 'color': '#fff'});",
+                               "}")
+                             )
+              ) %>% 
+  DT::formatRound(columns = c("mean", "sd", "min", "max"),
+                  digits = 2)
+```
+
+
+### Version 1
 
 ```{r}
 c_desc %>% 
@@ -203,7 +245,7 @@ c_desc %>%
 
 > This is the first version of the plot. There is a lot to work on here. Both axes and legend labels seem confusing. X-axis scale is also not complete. Also, it is hard to see any patterns without using facet_wrap and sorting the values.
 
-### Revised version
+### Version 2
 
 ```{r}
 c_desc %>% 
@@ -233,6 +275,46 @@ c_desc %>%
 ```
 
 > The revised version looks much better. You can see interesting patterns such as Spain's scores. The colors are terrible, though. Also, it'd be nice to see the grand mean to have a general reference category.
+
+### Version 3
+
+```{r}
+c_desc %>% 
+  ggplot() + 
+  geom_vline(data = gmeans,
+             aes(xintercept = m), 
+             linetype = 2,
+             alpha = .6) +   
+  geom_col(
+    aes(mean, reorder_within(country, mean, vars), 
+        fill = country,
+        alpha = .9
+        )
+          ) + 
+  scale_y_reordered() + 
+  scale_x_continuous(expand = c(0, 0)
+                     ) +
+  facet_wrap(~vars, 
+             scales = "free_y",
+             ncol = 2) + 
+  theme(
+    plot.title.position = "plot",
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    legend.position = "none",
+    axis.text.y = element_text(color = "black",
+                               size = 11),
+    axis.text.x = element_text(color = "black",
+                               size = 9),
+    axis.title = element_blank()
+  )  + 
+  labs(
+    title = "Endorsement of Individualizing and Binding Moral Values Across Countries",
+    caption = "Vertical lines represent the average of all countries."
+    ) 
+```
+
+> Based on the peer reviews I received, I realized that there is nothing to indicate what the values on the x-axis mean.
 
 
 # Predictors of moral values
