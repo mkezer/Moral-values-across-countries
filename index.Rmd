@@ -224,11 +224,7 @@ This plot visualizes the average scores for individualizing and binding foundati
 
 The values on the x-axis range from 0 (i.e., Strongly Disagree) to 5 (i.e., Strongly Agree).  
 
-The final version was improved by (1) modifying the x-axis and (2) explaining the meaning of the colors (i.e., each color represents a country).
-
-One interesting pattern can be seen for Spain. While Spain rates the highest in individualizing values, it rates the lowest in binding values.
-  
-Click on the tabs to see the evolution of the final version of this plot.  
+The final version was improved by (1) modifying the x-axis and (2) explaining the meaning of the colors (i.e., each color represents a country).  
 
 **Descriptive Statistics**  
   
@@ -242,9 +238,9 @@ DT::datatable(c_desc,
               rownames = FALSE,
               filter = "none",
               options = list(scrollX = TRUE,
+                             pageLength = 6,
                              searching = FALSE,
                              columnDefs = list(list(className = "dt-center",
-                                                    width = "75px",
                                                     targets = "_all")
                                                ),
                              lengthChange = FALSE,
@@ -349,7 +345,7 @@ c_desc %>%
 > Based on the peer reviews I received, I realized that there is nothing to indicate what the values on the x-axis and the colors mean.
 
 
-# Predictors of moral values
+# Predictors of moral values  
 
 Background {.sidebar}
 -----------------------------------------------------------------------
@@ -419,9 +415,6 @@ model_b <- lmer(bind ~ relevel(sex, ref = 2) + # level 1 predictor
                 data = df
                 )
 
-sjPlot::tab_model(model_i)
-sjPlot::tab_model(model_b)
-
 # extract coefficients
 m_i_fixed <-
 broom.mixed::tidy(model_i) %>% 
@@ -466,6 +459,22 @@ both_ms <- bind_rows(m_i_fixed, m_b_fixed)
 ### **Final Version**
 
 ```{r}
+# Tried to reorder the y axis, but this didn't work for some reason.
+# both_ms %<>% 
+#   mutate(
+#     term = factor(term, 
+#                   levels = c("Sex [Female]",
+#                              "Population Sex Ratio",
+#                              "Individualism",
+#                              "Masculinity",
+#                              "Gender Equality",
+#                              "Human Development Index",
+#                              "Overall Life Satisfaction Index"
+#                             )
+#                   )
+#         )
+
+
 ggplot() + 
   
   geom_vline(xintercept = 0, 
@@ -473,8 +482,8 @@ ggplot() +
              linetype = 2) +  
   
   geom_errorbarh(data = filter(both_ms, model == "Individualizing"),
-                 aes(xmin = estimate - 1.96*std.error,
-                     xmax = estimate + 1.96*std.error,
+                 aes(xmin = estimate + qnorm(0.025)*std.error,
+                     xmax = estimate + qnorm(0.975)*std.error,
                      y = term,
                      color = "Individualizing"),
                  position = position_nudge(y = -.1),
@@ -530,14 +539,7 @@ Column {.tabset .tabset-fade data-width=400}
 -----------------------------------------------------------------------
 ### About  
 
-**Model**  
-I conducted a multilevel regression for each of the moral values where sex was the Level 1 predictor, the country-level variables were the Level 2 predictors, country had a random intercept, and a random slope for sex was used.  
-             
-**Interpretation**  
-  
 The plot describes the fixed effects for the models described above. The coefficients are unstandardized and represented by the dots. The lines represent the 95% confidence intervals.  
-
-Looking at the plot, we can see that sex, gender equality, and overall life satisfaction are the significant predictors of individualizing moral values; whereas, only gender equality is a significant predictor of binding moral values.  
 
 **Findings**  
   
@@ -596,7 +598,8 @@ table %>%
   ) %>% 
   opt_row_striping() %>% 
   tab_options(
-    heading.background.color = "#9f939c"
+    heading.background.color = "#9f939c",
+    table.font.size = "100%"
     ) %>% 
   tab_style(
     style = list(
