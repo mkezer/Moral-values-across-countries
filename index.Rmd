@@ -519,7 +519,7 @@ ggplot() +
   
   scale_x_continuous(n.breaks = 10) +
   
-  theme(plot.title = element_text(face = "bold", vjust = 3),
+  theme(plot.title = element_text(vjust = 3),
         plot.title.position = "plot",
         axis.text.y = element_text(color = "black",
                                    size = 11),
@@ -759,12 +759,14 @@ pred_combined %>%
        x = "Gender Equality",
        y = "Predicted Values",
        color = "Country") +
-  theme(axis.text = element_text(size = 10,
-                                 colour = "black"),    
-        strip.background.x = element_rect(color = "gray80",
-                                      size = 1),
-        strip.text.x = element_text(face = "bold",
-                                    size = 11)
+  theme(
+    plot.title.position = "plot",
+    axis.text = element_text(size = 10,
+                             colour = "black"),    
+    strip.background.x = element_rect(color = "gray80",
+                                  size = 1),
+    strip.text.x = element_text(face = "bold",
+                                size = 11)
         
         ) +
   gghighlight(group %in% c("Japan", "Netherlands", "Spain", "Iran"),
