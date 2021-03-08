@@ -680,7 +680,7 @@ dwplot(both_ms,
 
 > Easier to see the points. The legend makes sense now, but still could be better. Colors can be improved. Also, there are too many grid lines.
 
-# Predicted Values of Moral Values by Gender Inequality
+# Predicted Values of Moral Values by Gender Equality
 
 Background {.sidebar}
 -----------------------------------------------------------------------
@@ -817,34 +817,43 @@ The plot describes the fixed effects for the models described above. The coeffic
 **Findings**  
   
 ```{r}
-df2 <- as_tibble(df)
+pred_combined_wide <- 
+  bind_cols(
+    
+    subset(pred_combined, outcome == "Individualizing",
+           select = c(x:group)),
+    
+    subset(pred_combined, outcome == "Binding",
+           select = c(x:group))
+  ) %>% 
+  rename(
+    ge1 = 1, p1 = 2, g1 = 3,
+    ge2 = 4, p2 = 5, g2 = 6
+  ) %>% 
+  select(-g2)
 
-nested <- df2 %>% 
-  nest(-country)
-
-table2 <-
-nested %>% 
-  mutate(
-    model_sex = map(data, ~ lm(indiv ~ sex, data = .)),
-    tidied = map(model_sex, tidy)
-    ) %>% 
-  unnest(tidied) %>% 
-  select(country, term:p.value) %>% 
-  mutate(
-    p.value = round(p.value, digits = 3),
-    across(c(estimate, std.error), ~round(., digits = 2)),
-    term = recode(term,
-                  `(Intercept)` = "Intercept",
-                  `sexMale` = "Sex [Male]")
-  )
-
-table2 %>% 
-  select(-statistic) %>% 
-  group_by(country) %>% 
-  gt() %>% 
-  tab_options(
-    container.overflow.y = TRUE
-  )
+pred_combined %>% 
+  select(Country = group,
+         `Gender Equality` = x,
+         Outcome = outcome,
+         `Predicted Value` = predicted
+         ) %>% 
+  DT::datatable(rownames = FALSE,
+                filter = "top",
+                options = list(pageLength = 6,
+                               searching = FALSE,
+                               columnDefs = list(list(className = "df-center",
+                                                      targets = "_all")
+                                                 ),
+                               lengthChange = FALSE,
+                               initComplete = JS(
+                               "function(settings, json) {",
+                               "$(this.api().table().header()).css({'background-color': '#9f939c', 'color': '#fff'});",
+                               "}")
+                               )
+                ) %>% 
+  DT::formatRound(columns = "Predicted Value",
+                  digits = 2)
 ```
 
 ### Version 1
