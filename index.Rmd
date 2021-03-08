@@ -562,13 +562,13 @@ dwplot(both_ms,
   scale_color_manual(values = c("cornflowerblue", "#F8766D"))
 ```
 
-> Based on the peer review I received, I realized that the order of the variables in the legend is reversed.
+> Based on the peer review I received, I realized that the order of the variables in the legend is reversed. However, because I could not find a way to reorder the names in the legend, I recreated the whole plot from scratch using ggplot2 code.
 
 Column {.tabset .tabset-fade data-width=400}
 -----------------------------------------------------------------------
 ### About  
 
-The plot describes the fixed effects for the models described above. The coefficients are unstandardized and represented by the dots. The lines represent the 95% confidence intervals.  
+The plot describes the fixed effects for the models described below. The coefficients are unstandardized and represented by the dots. The lines represent the 95% confidence intervals.  
 
 **Findings**  
   
