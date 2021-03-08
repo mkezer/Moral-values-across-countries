@@ -807,12 +807,14 @@ ggpubr::ggarrange(p11, p21,
     )
 ```
 
+> Based on the peer review, I changed the limits of y-axis, making them the same. Also, I added the raw data for the plots. I highlighted four countries from different cultures.
+
 Column {.tabset .tabset-fade data-width=400}
 -----------------------------------------------------------------------
 
 ### About
 
-The plot describes the fixed effects for the models described above. The coefficients are unstandardized and represented by the dots. The lines represent the 95% confidence intervals.  
+The plot describes the random effects for the countries where gender equality predicts moral values. The plots describe the different outcome values at different levels of gender equality for each country. The table below shows the raw data for the plot.
 
 **Findings**  
   
