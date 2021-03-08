@@ -993,7 +993,8 @@ ggplot(p_combined) +
   )  + 
   labs(
     title = "Predicted values of Individualizing and Binding Moral Values by Sex",
-    x = "Predicted Values"
+    x = "Predicted Values",
+    caption = "\n"
     ) +
   scale_color_manual(values = c("#FFDB6D", "#D16103"))
 ```
