@@ -819,21 +819,6 @@ The plot describes the random effects for the countries where gender equality pr
 **Findings**  
   
 ```{r}
-pred_combined_wide <- 
-  bind_cols(
-    
-    subset(pred_combined, outcome == "Individualizing",
-           select = c(x:group)),
-    
-    subset(pred_combined, outcome == "Binding",
-           select = c(x:group))
-  ) %>% 
-  rename(
-    ge1 = 1, p1 = 2, g1 = 3,
-    ge2 = 4, p2 = 5, g2 = 6
-  ) %>% 
-  select(-g2)
-
 pred_combined %>% 
   select(Country = group,
          `Gender Equality` = x,
@@ -1008,7 +993,6 @@ ggplot(p_combined) +
   )  + 
   labs(
     title = "Predicted values of Individualizing and Binding Moral Values by Sex",
-    caption = "\nDashed lines represent the average predicted values of all countries.",
     x = "Predicted Values"
     ) +
   scale_color_manual(values = c("#FFDB6D", "#D16103"))
@@ -1019,7 +1003,7 @@ Column {data-width=400}
 
 ### About
 
-The plot describes the fixed effects for the models described above. The coefficients are unstandardized and represented by the dots. The lines represent the 95% confidence intervals.  
+The plot describes the predicted values of moral values by sex. The table below represents models where moral value is predicted by sex separate for each country.
 
 **Findings**  
   
@@ -1032,11 +1016,11 @@ nested <- df2 %>%
 table2 <-
 nested %>% 
   mutate(
-    model_sex = map(data, ~ lm(indiv ~ sex, data = .)),
-    tidied = map(model_sex, tidy)
+    model_sex_b = map(data, ~ lm(bind ~ sex, data = .)),
+    tidied = map(model_sex_b, tidy)
     ) %>% 
   unnest(tidied) %>% 
-  select(country, term:p.value) %>% 
+  select(country, term, estimate, std.error, p.value) %>% 
   mutate(
     p.value = round(p.value, digits = 3),
     across(c(estimate, std.error), ~round(., digits = 2)),
@@ -1045,11 +1029,102 @@ nested %>%
                   `sexMale` = "Sex [Male]")
   )
 
-table2 %>% 
-  select(-statistic) %>% 
+table3 <-
+nested %>% 
+  mutate(
+    model_sex_i = map(data, ~ lm(indiv ~ sex, data = .)),
+    tidied = map(model_sex_i, tidy)
+    ) %>% 
+  unnest(tidied) %>% 
+  select(country, term, estimate, std.error, p.value) %>% 
+  mutate(
+    p.value = round(p.value, digits = 3),
+    across(c(estimate, std.error), ~round(., digits = 2)),
+    term = recode(term,
+                  `(Intercept)` = "Intercept",
+                  `sexMale` = "Sex [Male]")
+  )
+
+table4 <- 
+  bind_cols(
+    
+    table2,
+    
+    select(table3, 
+           estimate2 = estimate,
+           se2 = std.error,
+           p2 = p.value)
+    
+  )
+
+table4 %>% 
   group_by(country) %>% 
   gt() %>% 
+  tab_header(
+    title = "Predicting Moral Values by Sex for Each Country"
+  ) %>% 
+  cols_label(term = "",
+             estimate = md("*B*"),
+             std.error = "SE",
+             p.value = "p",
+             estimate2 = md("*B*"),
+             se2 = "SE",
+             p2 = "p"
+             ) %>% 
+  tab_spanner(
+    label = "Binding",
+    columns = vars(estimate, std.error, p.value)
+  ) %>% 
+  tab_spanner(
+    label = "Individualizing",
+    columns = vars(estimate2, se2, p2)
+  ) %>% 
+  fmt_number(
+    columns = vars(estimate, estimate2, std.error, se2),
+    decimals = 2
+  ) %>% 
+  fmt_number(
+    columns = vars(p.value, p2),
+    decimals = 3
+  ) %>% 
+  cols_align(
+    columns = "term",
+    align = "right"
+  ) %>% 
+  opt_row_striping() %>% 
   tab_options(
+    heading.background.color = "#9f939c",
+    table.font.size = "100%"    
+  ) %>% 
+  tab_style(
+    style = list(
+      cell_text(weight = "bold")
+    ),
+    locations = cells_body(
+      columns = vars(p.value),
+      rows = p.value < .05
+    )
+  ) %>% 
+  tab_style(
+    style = list(
+      cell_text(weight = "bold")
+    ),
+    locations = cells_body(
+      columns = vars(p2),
+      rows = p2 < .05
+    )
+  ) %>% 
+  tab_options(
+    container.height = px(1000),
     container.overflow.y = TRUE
   )
 ```
+
+
+
+
+
+
+
+
+
