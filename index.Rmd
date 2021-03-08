@@ -149,7 +149,7 @@ Individualizing: Compassion for those who are suffering is the most crucial virt
 
 Binding: People should be loyal to their family members, even when they have done something wrong.  
 
-Column {data-width=600}
+Column {.tabset .tabset-fade data-width=600}
 -----------------------------------------------------------------------
 
 ### **Final Version**
@@ -218,6 +218,46 @@ c_desc %>%
     caption = "\n\nDashed lines represent the average of all countries.\nColors represent the countries."
     ) 
 ```
+
+### Before Peer Review
+
+```{r}
+c_desc %>% 
+  ggplot() + 
+  geom_vline(data = gmeans,
+             aes(xintercept = m), 
+             linetype = 2,
+             alpha = .6) +   
+  geom_col(
+    aes(mean, reorder_within(country, mean, vars), 
+        fill = country,
+        alpha = .9
+        )
+          ) + 
+  scale_y_reordered() + 
+  scale_x_continuous(expand = c(0, 0)
+                     ) +
+  facet_wrap(~vars, 
+             scales = "free_y",
+             ncol = 2) + 
+  theme(
+    plot.title.position = "plot",
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    legend.position = "none",
+    axis.text.y = element_text(color = "black",
+                               size = 11),
+    axis.text.x = element_text(color = "black",
+                               size = 9),
+    axis.title = element_blank()
+  )  + 
+  labs(
+    title = "Endorsement of Individualizing and Binding Moral Values Across Countries",
+    caption = "Vertical lines represent the average of all countries."
+    ) 
+```
+
+> Based on the peer reviews I received, I realized that there is nothing to indicate what the values on the x-axis and the colors mean.
 
 Column {.tabset .tabset-fade data-width=400}
 -----------------------------------------------------------------------
@@ -306,46 +346,6 @@ c_desc %>%
 
 > The revised version looks much better. You can see interesting patterns such as Spain's scores. The colors are terrible, though. Also, it'd be nice to see the grand mean to have a general reference category.
 
-### Version 3
-
-```{r}
-c_desc %>% 
-  ggplot() + 
-  geom_vline(data = gmeans,
-             aes(xintercept = m), 
-             linetype = 2,
-             alpha = .6) +   
-  geom_col(
-    aes(mean, reorder_within(country, mean, vars), 
-        fill = country,
-        alpha = .9
-        )
-          ) + 
-  scale_y_reordered() + 
-  scale_x_continuous(expand = c(0, 0)
-                     ) +
-  facet_wrap(~vars, 
-             scales = "free_y",
-             ncol = 2) + 
-  theme(
-    plot.title.position = "plot",
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor.y = element_blank(),
-    legend.position = "none",
-    axis.text.y = element_text(color = "black",
-                               size = 11),
-    axis.text.x = element_text(color = "black",
-                               size = 9),
-    axis.title = element_blank()
-  )  + 
-  labs(
-    title = "Endorsement of Individualizing and Binding Moral Values Across Countries",
-    caption = "Vertical lines represent the average of all countries."
-    ) 
-```
-
-> Based on the peer reviews I received, I realized that there is nothing to indicate what the values on the x-axis and the colors mean.
-
 
 # Predictors of moral values  
 
@@ -381,7 +381,7 @@ Individualizing: Compassion for those who are suffering is the most crucial virt
 
 Binding: People should be loyal to their family members, even when they have done something wrong.  
 
-Column {data-width=600}
+Column {.tabset .tabset-fade data-width=600}
 -----------------------------------------------------------------------
 
 ```{r MLM, include=FALSE}
@@ -537,6 +537,33 @@ ggplot() +
   
 ```
 
+### Before Peer Review
+
+```{r}
+dwplot(both_ms, 
+        dot_args = list(size = 2)
+        ) + 
+  ggtitle("Predicting moral values by sex and country-level predictors") +
+  xlab("Unstandardized Coefficient") + 
+  geom_vline(xintercept = 0, 
+             colour = "grey60", 
+             linetype = 2) + 
+  theme(plot.title = element_text(face = "bold", vjust = 3),
+        plot.title.position = "plot",
+        axis.text.y = element_text(color = "black",
+                                   size = 11),
+        legend.justification = c(0, 0), 
+        legend.position = c(.65, .85),
+        legend.background = element_rect(colour = "grey80"),
+        legend.title = element_blank(),
+        panel.grid.major.y = element_blank()
+        ) +
+  scale_x_continuous(n.breaks = 10) +
+  scale_color_manual(values = c("cornflowerblue", "#F8766D"))
+```
+
+> Based on the peer review I received, I realized that the order of the variables in the legend is reversed.
+
 Column {.tabset .tabset-fade data-width=400}
 -----------------------------------------------------------------------
 ### About  
@@ -614,8 +641,6 @@ table %>%
   )
 ```
 
-
-
 ### Version 1
 
 ```{r}
@@ -655,34 +680,7 @@ dwplot(both_ms,
 
 > Easier to see the points. The legend makes sense now, but still could be better. Colors can be improved. Also, there are too many grid lines.
 
-### Version 3
-
-```{r}
-dwplot(both_ms, 
-        dot_args = list(size = 2)
-        ) + 
-  ggtitle("Predicting moral values by sex and country-level predictors") +
-  xlab("Unstandardized Coefficient") + 
-  geom_vline(xintercept = 0, 
-             colour = "grey60", 
-             linetype = 2) + 
-  theme(plot.title = element_text(face = "bold", vjust = 3),
-        plot.title.position = "plot",
-        axis.text.y = element_text(color = "black",
-                                   size = 11),
-        legend.justification = c(0, 0), 
-        legend.position = c(.65, .85),
-        legend.background = element_rect(colour = "grey80"),
-        legend.title = element_blank(),
-        panel.grid.major.y = element_blank()
-        ) +
-  scale_x_continuous(n.breaks = 10) +
-  scale_color_manual(values = c("cornflowerblue", "#F8766D"))
-```
-
-> Based on the peer review I received, I realized that the order of the variables in the legend is reversed.
-
-# Sex X Moral Values for each country
+# Predicted Values of Moral Values by Gender Inequality
 
 Background {.sidebar}
 -----------------------------------------------------------------------
@@ -717,77 +715,10 @@ Individualizing: Compassion for those who are suffering is the most crucial virt
 Binding: People should be loyal to their family members, even when they have done something wrong.   
 
 
-Column {data-width=600}
+Column {.tabset .tabset-fade data-width=600}
 -----------------------------------------------------------------------
 
-### Final Version
-
-```{r}
-ms1 <- lmer(indiv ~ sex + (sex|country), data = df)
-ms2 <- lmer(bind ~ sex + (sex|country), data = df)
-
-p1 <- ggpredict(ms1,
-                terms = c("sex", "country"),
-                type = "re"
-                )
-
-p2 <- ggpredict(ms2,
-                terms = c("sex", "country"),
-                type = "re"
-                )
-
-p1 %<>% 
-  as.data.frame() %>% 
-  mutate(
-    outcome = "Individualizing"
-  )
-
-p2 %<>% 
-  as.data.frame() %>% 
-  mutate(
-    outcome = "Binding"
-  )
-
-p_combined <- 
-  bind_rows(p1, p2) %>% 
-  rename(Sex = x)
-
-ggplot(p_combined) + 
-  geom_line(aes(predicted, group),
-            size = 1.5,
-            color = "#535353") + 
-  geom_point(aes(predicted, group, color = Sex),
-             size = 2.5) + 
-  geom_hline(yintercept = 0.5,
-             color = "gray90") + 
-  facet_wrap(~outcome) +
-  theme(
-    plot.title.position = "plot",
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor.y = element_blank(),
-    legend.position = c(0.01, -.17),
-    legend.direction = "horizontal",
-    axis.text.y = element_text(color = "black",
-                               size = 11),
-    axis.text.x = element_text(color = "black",
-                               size = 8,
-                               hjust = .5),
-    axis.title.y = element_blank(),
-    axis.title.x = element_text(vjust = -2),
-    strip.background.x = element_rect(color = "gray80",
-                                      size = 1),
-    strip.text.x = element_text(face = "bold"),
-    legend.background = element_rect(color = "gray80",
-                                     size = .5)
-  )  + 
-  labs(
-    title = "Predicted values of Individualizing and Binding Moral Values by Sex",
-    caption = "\nDashed lines represent the average predicted values of all countries.",
-    x = "Predicted Values"
-    ) +
-  scale_color_manual(values = c("#95c3db", "#1a64a4"))
-```
-
+### **Final Version**
 
 ```{r}
 # run the models
@@ -839,6 +770,41 @@ pred_combined %>%
         ) +
   gghighlight(group %in% c("Japan", "Netherlands", "Spain", "Iran"),
                calculate_per_facet = TRUE)
+```
+
+### Before Peer Review
+
+```{r}
+p11 <- 
+  predicted1 %>% 
+  ggplot(aes(x, predicted, color = group)) +
+  geom_line(size = 1) +
+  labs(x = "Gender Equality",
+       y = "Individualizing",
+       color = "Country") +
+  theme(axis.text = element_text(size = 10,
+                                 colour = "black")
+        ) +
+  gghighlight::gghighlight(group %in% c("Poland", "Netherlands", "Hungary"))
+
+p21 <- 
+  predicted2 %>% 
+  ggplot(aes(x, predicted, color = group)) +
+  geom_line(size = 1) +
+  labs(x = "Gender Equality",
+       y = "Binding",
+       color = "Country") +
+  theme(axis.text = element_text(size = 10,
+                                 colour = "black")
+        ) +
+  gghighlight::gghighlight(group %in% c("Poland", "Netherlands", "Spain"))
+
+ggpubr::ggarrange(p11, p21,
+                  common.legend = TRUE,
+                  legend = "bottom")  %>%  
+  ggpubr::annotate_figure(
+    top = ggpubr::text_grob("Countries at the top, middle, and bottom")
+    )
 ```
 
 Column {.tabset .tabset-fade data-width=400}
@@ -931,40 +897,148 @@ ggpubr::ggarrange(p1, p2,
 > This version is better, but it would be nicer to see which countries are at the top, middle, and bottom of the plot.
 
 
-### Version 3
+# Predicted Values of Moral Values by Sex for each country
+
+Background {.sidebar}
+-----------------------------------------------------------------------
+**Data**  
+Data used in this dashboard come from the second study of [Atari et al. (2020)](http://dx.doi.org/10.1098/rspb.2020.1201), which can be downloaded from [Kaggle](https://www.kaggle.com/tunguz/sex-differences-in-moral-judgements-67-countries).  
+
+This study has data on moral values in 19 countries. There is also a second dataset with country-level variables.
+
+**Country-level variables**  
+  
+Population Sex Ratio  
+Individualism  
+Masculinity  
+Gender Equality  
+Human Development Index  
+Overall Life Satisfaction Index  
+
+**Definitions**
+
+Moral foundations theory [(Graham et al., 2013)](https://doi.org/10.1016/B978-0-12-407236-7.00002-4) argues that there are five universal moral values. These five values have been grouped into two overarching moral values [(Graham et al., 2009)](http://dx.doi.org/10.1037/a0015141) as individualizing and binding moral values.  
+
+*Individualizing* values encompass moral foundations of care (i.e., cherishing and protecting others) and fairness (i.e., rendering justice according to shared rules).  
+
+*Binding* values encompass moral foundations of loyalty (i.e., standing with your group, family, nation), authority (i.e., submitting to tradition and legitimate authority), and purity (i.e., abhorrence for disgusting things, foods, actions).  
+
+**Example Items**  
+
+Please read the following sentences and indicate your agreement or disagreement:  
+
+Individualizing: Compassion for those who are suffering is the most crucial virtue.  
+
+Binding: People should be loyal to their family members, even when they have done something wrong.   
+
+
+Column {data-width=600}
+-----------------------------------------------------------------------
+
+### **Final Version**
 
 ```{r}
+ms1 <- lmer(indiv ~ sex + (sex|country), data = df)
+ms2 <- lmer(bind ~ sex + (sex|country), data = df)
 
+p1 <- ggpredict(ms1,
+                terms = c("sex", "country"),
+                type = "re"
+                )
 
-p11 <- 
-  predicted1 %>% 
-  ggplot(aes(x, predicted, color = group)) +
-  geom_line(size = 1) +
-  labs(x = "Gender Equality",
-       y = "Individualizing",
-       color = "Country") +
-  theme(axis.text = element_text(size = 10,
-                                 colour = "black")
-        ) +
-  gghighlight::gghighlight(group %in% c("Poland", "Netherlands", "Hungary"))
+p2 <- ggpredict(ms2,
+                terms = c("sex", "country"),
+                type = "re"
+                )
 
-p21 <- 
-  predicted2 %>% 
-  ggplot(aes(x, predicted, color = group)) +
-  geom_line(size = 1) +
-  labs(x = "Gender Equality",
-       y = "Binding",
-       color = "Country") +
-  theme(axis.text = element_text(size = 10,
-                                 colour = "black")
-        ) +
-  gghighlight::gghighlight(group %in% c("Poland", "Netherlands", "Spain"))
+p1 %<>% 
+  as.data.frame() %>% 
+  mutate(
+    outcome = "Individualizing"
+  )
 
-ggpubr::ggarrange(p11, p21,
-                  common.legend = TRUE,
-                  legend = "bottom")  %>%  
-  ggpubr::annotate_figure(
-    top = ggpubr::text_grob("Countries at the top, middle, and bottom")
-    )
+p2 %<>% 
+  as.data.frame() %>% 
+  mutate(
+    outcome = "Binding"
+  )
+
+p_combined <- 
+  bind_rows(p1, p2) %>% 
+  rename(Sex = x)
+
+ggplot(p_combined) + 
+  geom_line(aes(predicted, group),
+            size = 1.5,
+            color = "#535353") + 
+  geom_point(aes(predicted, group, color = Sex),
+             size = 2.5) + 
+  geom_hline(yintercept = 0.5,
+             color = "gray90") + 
+  facet_wrap(~outcome) +
+  theme(
+    plot.title.position = "plot",
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    legend.position = c(0.01, -.15),
+    legend.direction = "horizontal",
+    axis.text.y = element_text(color = "black",
+                               size = 11),
+    axis.text.x = element_text(color = "black",
+                               size = 8,
+                               hjust = .5),
+    axis.title.y = element_blank(),
+    axis.title.x = element_text(vjust = -2),
+    strip.background.x = element_rect(color = "gray80",
+                                      size = 1),
+    strip.text.x = element_text(face = "bold"),
+    legend.background = element_rect(color = "gray80",
+                                     size = .5)
+  )  + 
+  labs(
+    title = "Predicted values of Individualizing and Binding Moral Values by Sex",
+    caption = "\nDashed lines represent the average predicted values of all countries.",
+    x = "Predicted Values"
+    ) +
+  scale_color_manual(values = c("#FFDB6D", "#D16103"))
 ```
 
+Column {data-width=400}
+-----------------------------------------------------------------------
+
+### About
+
+The plot describes the fixed effects for the models described above. The coefficients are unstandardized and represented by the dots. The lines represent the 95% confidence intervals.  
+
+**Findings**  
+  
+```{r}
+df2 <- as_tibble(df)
+
+nested <- df2 %>% 
+  nest(-country)
+
+table2 <-
+nested %>% 
+  mutate(
+    model_sex = map(data, ~ lm(indiv ~ sex, data = .)),
+    tidied = map(model_sex, tidy)
+    ) %>% 
+  unnest(tidied) %>% 
+  select(country, term:p.value) %>% 
+  mutate(
+    p.value = round(p.value, digits = 3),
+    across(c(estimate, std.error), ~round(., digits = 2)),
+    term = recode(term,
+                  `(Intercept)` = "Intercept",
+                  `sexMale` = "Sex [Male]")
+  )
+
+table2 %>% 
+  select(-statistic) %>% 
+  group_by(country) %>% 
+  gt() %>% 
+  tab_options(
+    container.overflow.y = TRUE
+  )
+```
