@@ -31,6 +31,7 @@ library(ggeffects)
 library(htmlwidgets)
 library(gt)
 library(gghighlight)
+library(broom)
 
 theme_set(theme_minimal()) # set theme
 options(scipen = 999) # remove scientific notation
@@ -850,76 +851,34 @@ The plot describes the fixed effects for the models described above. The coeffic
 **Findings**  
   
 ```{r}
-table <- 
-  bind_cols(
-    
-    subset(both_ms, model == "Binding",
-           select = c(term:std.error, p.value)
-           ),
-    
-    subset(both_ms, model == "Individualizing",
-           select = c(term:std.error, p.value)
-           )
-  ) %>% 
-  rename(
-    term1 = 1, term2 = 5,
-    est1 = 2, est2 = 6,
-    se1 = 3, se2 = 7,
-    p1 = 4, p2 = 8
-  )
+df2 <- as_tibble(df)
 
-table %>% 
-  select(-term2) %>% 
-  mutate(gr = c("Level 1", rep("Level 2", 6))) %>% 
-  group_by(gr) %>% 
-  gt() %>% 
-  tab_header(
-    title = "Predicting Individualizing and Binding Moral Values",
-    subtitle = "Across 19 Countries"
-  ) %>% 
-  cols_label(term1 = "",
-             est1 = md("*B*"),
-             se1 = "SE",
-             p1 = "p",
-             est2 = md("*B*"),
-             se2 = "SE",
-             p2 = "p") %>% 
-  tab_spanner(
-    label = "Binding",
-    columns = vars(est1, se1, p1)
-  ) %>% 
-  tab_spanner(
-    label = "Individualizing",
-    columns = vars(est2, se2, p2)
-  ) %>% 
-  fmt_number(columns = vars(est1, se1,
-                            est2, se2),
-             decimals = 2) %>% 
-  fmt_number(columns = vars(p1, p2),
-             decimals = 4
-             ) %>% 
-  cols_align(
-    columns = "term1",
-    align = "right"
-  ) %>% 
-  opt_row_striping() %>% 
-  tab_options(
-    heading.background.color = "#9f939c",
-    table.font.size = "100%"
+nested <- df2 %>% 
+  nest(-country)
+
+table2 <-
+nested %>% 
+  mutate(
+    model_sex = map(data, ~ lm(indiv ~ sex, data = .)),
+    tidied = map(model_sex, tidy)
     ) %>% 
-  tab_style(
-    style = list(
-      cell_text(weight = "bold")
-    ),
-    locations = cells_body(
-      columns = vars(p1),
-      rows = p1 < .05
-    )
+  unnest(tidied) %>% 
+  select(country, term:p.value) %>% 
+  mutate(
+    p.value = round(p.value, digits = 3),
+    across(c(estimate, std.error), ~round(., digits = 2)),
+    term = recode(term,
+                  `(Intercept)` = "Intercept",
+                  `sexMale` = "Sex [Male]")
   )
 
-pred_combined %>% 
-  arrange(group) %>% 
-  gt()
+table2 %>% 
+  select(-statistic) %>% 
+  group_by(country) %>% 
+  gt() %>% 
+  tab_options(
+    container.overflow.y = TRUE
+  )
 ```
 
 ### Version 1
