@@ -1028,10 +1028,11 @@ p_combined2 <- left_join(p_combined, table5)
 
 ggplot(p_combined2) + 
   geom_line(aes(predicted, group, color = dif),
-            size = 1.5) + 
+            size = 1.25) + 
   geom_point(aes(predicted, group, fill = Sex),
-             size = 2.5,
-             shape = 21
+             size = 2,
+             shape = 21,
+             stroke = 0
              ) + 
   geom_hline(yintercept = 0.5,
              color = "gray90") + 
