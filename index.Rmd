@@ -68,9 +68,6 @@ df %<>%
     )
   )
 
-# check data structure and variables
-str(df)
-
 # descriptive statistics by country
 c_desc <- 
 df %>% 
@@ -928,87 +925,12 @@ Individualizing: Compassion for those who are suffering is the most crucial virt
 Binding: People should be loyal to their family members, even when they have done something wrong.   
 
 
-Column {data-width=600}
+Column {.tabset .tabset-fade data-width=600}
 -----------------------------------------------------------------------
 
 ### **Final Version**
 
-```{r}
-ms1 <- lmer(indiv ~ sex + (sex|country), data = df)
-ms2 <- lmer(bind ~ sex + (sex|country), data = df)
-
-p1 <- ggpredict(ms1,
-                terms = c("sex", "country"),
-                type = "re"
-                )
-
-p2 <- ggpredict(ms2,
-                terms = c("sex", "country"),
-                type = "re"
-                )
-
-p1 %<>% 
-  as.data.frame() %>% 
-  mutate(
-    outcome = "Individualizing"
-  )
-
-p2 %<>% 
-  as.data.frame() %>% 
-  mutate(
-    outcome = "Binding"
-  )
-
-p_combined <- 
-  bind_rows(p1, p2) %>% 
-  rename(Sex = x)
-
-ggplot(p_combined) + 
-  geom_line(aes(predicted, group),
-            size = 1.5,
-            color = "#535353") + 
-  geom_point(aes(predicted, group, color = Sex),
-             size = 2.5) + 
-  geom_hline(yintercept = 0.5,
-             color = "gray90") + 
-  facet_wrap(~outcome) +
-  theme(
-    plot.title.position = "plot",
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor.y = element_blank(),
-    legend.position = c(0.01, -.15),
-    legend.direction = "horizontal",
-    axis.text.y = element_text(color = "black",
-                               size = 11),
-    axis.text.x = element_text(color = "black",
-                               size = 8,
-                               hjust = .5),
-    axis.title.y = element_blank(),
-    axis.title.x = element_text(vjust = -2),
-    strip.background.x = element_rect(color = "gray80",
-                                      size = 1),
-    strip.text.x = element_text(face = "bold"),
-    legend.background = element_rect(color = "gray80",
-                                     size = .5)
-  )  + 
-  labs(
-    title = "Predicted values of Individualizing and Binding Moral Values by Sex",
-    x = "Predicted Values",
-    caption = "\n"
-    ) +
-  scale_color_manual(values = c("#FFDB6D", "#D16103"))
-```
-
-Column {data-width=400}
------------------------------------------------------------------------
-
-### About
-
-The plot describes the predicted values of moral values by sex. The table below represents models where moral value is predicted by sex separate for each country.
-
-**Findings**  
-  
-```{r}
+```{r table, include = FALSE}
 df2 <- as_tibble(df)
 
 nested <- df2 %>% 
@@ -1058,6 +980,140 @@ table4 <-
     
   )
 
+table5 <-
+table4 %>% 
+  filter(term == "Sex [Male]") %>% 
+  select(group = country, Binding = p.value, Individualizing = p2) %>% 
+  pivot_longer(cols = c(Binding, Individualizing),
+               names_to = "outcome",
+               values_to = "ps") %>% 
+  mutate(
+    dif = if_else(ps < .05, "p < .05", "p > .05")
+  )
+  
+```
+
+
+```{r}
+ms1 <- lmer(indiv ~ sex + (sex|country), data = df)
+ms2 <- lmer(bind ~ sex + (sex|country), data = df)
+
+p1 <- ggpredict(ms1,
+                terms = c("sex", "country"),
+                type = "re"
+                )
+
+p2 <- ggpredict(ms2,
+                terms = c("sex", "country"),
+                type = "re"
+                )
+
+p1 %<>% 
+  as.data.frame() %>% 
+  mutate(
+    outcome = "Individualizing"
+  )
+
+p2 %<>% 
+  as.data.frame() %>% 
+  mutate(
+    outcome = "Binding"
+  )
+
+p_combined <- 
+  bind_rows(p1, p2) %>% 
+  rename(Sex = x)
+
+p_combined2 <- left_join(p_combined, table5)
+
+ggplot(p_combined2) + 
+  geom_line(aes(predicted, group, color = dif),
+            size = 1.5) + 
+  geom_point(aes(predicted, group, fill = Sex),
+             size = 2.5,
+             shape = 21
+             ) + 
+  geom_hline(yintercept = 0.5,
+             color = "gray90") + 
+  facet_wrap(~outcome, scales = "free_x") +
+  theme(
+    plot.title.position = "plot",
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    axis.text.y = element_text(color = "black",
+                               size = 11),
+    axis.text.x = element_text(color = "black",
+                               size = 8,
+                               hjust = .5),
+    axis.title.y = element_blank(),
+    axis.title.x = element_text(vjust = -2),
+    strip.background.x = element_rect(color = "gray80",
+                                      size = 1),
+    strip.text.x = element_text(face = "bold"),
+    legend.background = element_rect(color = "gray80",
+                                     size = .5)
+  )  + 
+  labs(
+    title = "Predicted values of Individualizing and Binding Moral Values by Sex",
+    x = "Predicted Values",
+    caption = "\n"
+    ) +
+  scale_color_brewer("Significance", palette = "PRGn") +
+  scale_fill_brewer(palette = "Set1")
+```
+
+### Version 1
+```{r}
+ggplot(p_combined) + 
+  geom_line(aes(predicted, group),
+            size = 1.5,
+            color = "#535353") + 
+  geom_point(aes(predicted, group, color = Sex),
+             size = 2.5) + 
+  geom_hline(yintercept = 0.5,
+             color = "gray90") + 
+  facet_wrap(~outcome) +
+  theme(
+    plot.title.position = "plot",
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    legend.position = c(0.01, -.15),
+    legend.direction = "horizontal",
+    axis.text.y = element_text(color = "black",
+                               size = 11),
+    axis.text.x = element_text(color = "black",
+                               size = 8,
+                               hjust = .5),
+    axis.title.y = element_blank(),
+    axis.title.x = element_text(vjust = -2),
+    strip.background.x = element_rect(color = "gray80",
+                                      size = 1),
+    strip.text.x = element_text(face = "bold"),
+    legend.background = element_rect(color = "gray80",
+                                     size = .5)
+  )  + 
+  labs(
+    title = "Predicted values of Individualizing and Binding Moral Values by Sex",
+    x = "Predicted Values",
+    caption = "\n"
+    ) +
+  scale_color_manual(values = c("#FFDB6D", "#D16103"))
+```
+
+
+
+Column {data-width=400}
+-----------------------------------------------------------------------
+
+### About
+
+The plot describes the predicted values of moral values by sex. The table below represents models where moral value is predicted by sex separate for each country.
+
+**Findings**  
+  
+```{r}
 table4 %>% 
   group_by(country) %>% 
   gt() %>% 
